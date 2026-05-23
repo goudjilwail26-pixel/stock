@@ -1,0 +1,6 @@
+{
+  "name": "B2B Wholesale Marketplace",
+  "description": "A production-ready B2B Wholesale Marketplace Web Application with full-stack architecture, inventory matrix, order management, and secure roles (Admin / Buyer).",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
