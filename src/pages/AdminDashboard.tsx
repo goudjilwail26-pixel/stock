@@ -357,26 +357,24 @@ export default function AdminDashboard() {
             </div>
           )}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-3">
             {products?.map(p => (
-              <div key={p.id} className="bg-stokiloo-dim border border-stokiloo-border p-4 flex flex-col">
-                <div className="flex gap-4 mb-3">
-                  <div className="h-12 w-12 bg-stokiloo-black flex-shrink-0 border border-stokiloo-border overflow-hidden">
-                    {p.image_url ? (
-                       <img src={p.image_url} alt="" className="w-full h-full object-cover opacity-80" crossOrigin="anonymous"/>
-                    ) : (
-                       <div className="w-full h-full bg-stokiloo-black flex items-center justify-center text-[10px] text-stokiloo-grey">IMG</div>
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h4 className="font-bold text-sm text-stokiloo-white truncate" title={p.name}>{p.name}</h4>
-                    <p className="text-[10px] font-mono text-stokiloo-grey mt-0.5">{p.sku}</p>
-                  </div>
+              <div key={p.id} className="bg-stokiloo-dim border border-stokiloo-border p-2.5 flex flex-col">
+                <div className="aspect-square bg-stokiloo-black border border-stokiloo-border overflow-hidden mb-2">
+                  {p.image_url ? (
+                     <img src={p.image_url} alt="" className="w-full h-full object-cover opacity-80" crossOrigin="anonymous"/>
+                  ) : (
+                     <div className="w-full h-full bg-stokiloo-black flex items-center justify-center text-[10px] text-stokiloo-grey">IMG</div>
+                  )}
                 </div>
-                <div className="mt-auto pt-3 border-t border-stokiloo-border flex items-center justify-between">
-                  <div className="font-bold text-sm text-stokiloo-gold font-mono">{new Intl.NumberFormat('fr-DZ', { style: 'currency', currency: 'DZD' }).format(p.price)}</div>
-                  <div className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 ${p.stock_quantity > 0 ? 'bg-stokiloo-emerald/10 text-stokiloo-emerald' : 'bg-stokiloo-rose/10 text-stokiloo-rose'}`}>
-                    {p.stock_quantity} Left
+                <div className="min-w-0 mb-1.5">
+                  <h4 className="font-bold text-xs text-stokiloo-white truncate leading-tight" title={p.name}>{p.name}</h4>
+                  <p className="text-[9px] font-mono text-stokiloo-grey mt-0.5 truncate">{p.sku}</p>
+                </div>
+                <div className="mt-auto pt-1.5 border-t border-stokiloo-border flex items-center justify-between">
+                  <div className="font-bold text-xs text-stokiloo-gold font-mono">{new Intl.NumberFormat('fr-DZ', { style: 'currency', currency: 'DZD' }).format(p.price)}</div>
+                  <div className={`text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 ${p.stock_quantity > 0 ? 'bg-stokiloo-emerald/10 text-stokiloo-emerald' : 'bg-stokiloo-rose/10 text-stokiloo-rose'}`}>
+                    {p.stock_quantity}
                   </div>
                 </div>
               </div>
