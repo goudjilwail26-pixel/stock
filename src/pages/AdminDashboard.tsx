@@ -357,20 +357,20 @@ export default function AdminDashboard() {
             </div>
           )}
 
-          <div className="grid gap-1.5" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(70px, 1fr))' }}>
+          <div className="grid gap-1" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(64px, 1fr))' }}>
             {products?.map(p => (
               <div key={p.id} className="bg-stokiloo-dim border border-stokiloo-border overflow-hidden group hover:border-stokiloo-gold/40 transition-colors">
                 <div className="aspect-square bg-stokiloo-black overflow-hidden">
                   {p.image_url ? (
                      <img src={p.image_url} alt="" className="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300" crossOrigin="anonymous"/>
                   ) : (
-                     <div className="w-full h-full bg-stokiloo-black flex items-center justify-center text-[8px] text-stokiloo-grey">IMG</div>
+                     <div className="w-full h-full bg-stokiloo-black flex items-center justify-center text-[7px] text-stokiloo-grey">IMG</div>
                   )}
                 </div>
-                <div className="p-0.5">
-                  <div className="font-bold text-[8px] text-stokiloo-white truncate leading-tight" title={p.name}>{p.name}</div>
-                  <div className="flex items-center justify-between mt-px">
-                    <span className="font-bold text-[8px] text-stokiloo-gold font-mono">{new Intl.NumberFormat('fr-DZ', { style: 'currency', currency: 'DZD' }).format(p.price)}</span>
+                <div className="px-0.5 pb-0.5 pt-px">
+                  <div className="font-bold text-[7px] text-stokiloo-white truncate leading-tight" title={p.name}>{p.name}</div>
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-[7px] text-stokiloo-gold font-mono">{new Intl.NumberFormat('fr-DZ', { style: 'currency', currency: 'DZD' }).format(p.price)}</span>
                     <span className={`text-[6px] font-bold ${p.stock_quantity > 0 ? 'text-stokiloo-emerald' : 'text-stokiloo-rose'}`}>{p.stock_quantity}</span>
                   </div>
                 </div>
