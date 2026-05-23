@@ -1,19 +1,25 @@
 import React, { useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useCart } from '../context/CartContext';
 import { useToast } from '../context/ToastContext';
-import { Button } from '../components/ui';
+import { Button, Input } from '../components/ui';
 import { Product } from '../types';
-import { Minus, Plus, ArrowLeft, ShoppingCart, Package } from 'lucide-react';
+import { ArrowLeft, ShoppingCart, Package } from 'lucide-react';
+
+function parseQty(text: string): { num: number; display: string } {
+  const match = text.match(/^(\d+)/);
+  return { num: match ? parseInt(match[1]) : 0, display: text.trim() || '1' };
+}
 
 export default function ProductDetail() {
   const { id } = useParams();
-  const navigate = useNavigate();
   const { addToCart } = useCart();
   const { toast } = useToast();
-  const [quantity, setQuantity] = useState(1);
+  const [qtyText, setQtyText] = useState('1');
   const [imageIndex, setImageIndex] = useState(0);
+
+  const { num: qtyNum } = parseQty(qtyText);
 
   const { data: product, isLoading } = useQuery<Product>({
     queryKey: ['product', id],
@@ -89,38 +95,30 @@ export default function ProductDetail() {
 
           {product.stock_quantity > 0 && (
             <>
-              <div className="flex items-center gap-4">
-                <span className="text-sm text-stokiloo-silver">Quantity</span>
-                <div className="flex items-center border border-stokiloo-border">
-                  <button
-                    onClick={() => setQuantity(q => Math.max(1, q - 1))}
-                    className="h-11 w-11 flex items-center justify-center text-stokiloo-white hover:bg-stokiloo-dim transition-colors"
-                  >
-                    <Minus className="h-4 w-4" />
-                  </button>
-                  <span className="h-11 w-16 flex items-center justify-center text-stokiloo-white font-medium border-x border-stokiloo-border text-base">
-                    {quantity}
-                  </span>
-                  <button
-                    onClick={() => setQuantity(q => Math.min(product.stock_quantity, q + 1))}
-                    className="h-11 w-11 flex items-center justify-center text-stokiloo-white hover:bg-stokiloo-dim transition-colors"
-                  >
-                    <Plus className="h-4 w-4" />
-                  </button>
-                </div>
+              <div className="space-y-2">
+                <label className="text-sm text-stokiloo-silver">Quantity</label>
+                <Input
+                  type="text"
+                  value={qtyText}
+                  onChange={e => setQtyText(e.target.value)}
+                  placeholder='e.g. 12, 12kg, 20L, 5 cartons'
+                  className="bg-stokiloo-black border-stokiloo-border h-12 text-base max-w-xs"
+                />
+                <p className="text-xs text-stokiloo-grey">Type the quantity with any unit (kg, L, boxes…)</p>
               </div>
 
               <div className="flex items-center gap-4 pt-2">
                 <Button
                   size="lg"
                   className="flex-1 gap-3 text-base h-13"
+                  disabled={qtyNum < 1}
                   onClick={() => {
-                    for (let i = 0; i < quantity; i++) addToCart(product);
-                    toast(`${quantity} × ${product.name} added`, 'success');
-                    setQuantity(1);
+                    addToCart(product, qtyNum || 1, qtyText);
+                    toast(`${qtyText} × ${product.name} added`, 'success');
+                    setQtyText('1');
                   }}
                 >
-                  <ShoppingCart className="h-5 w-5" /> Add to bag — {new Intl.NumberFormat('fr-DZ', { style: 'currency', currency: 'DZD' }).format(product.price * quantity)}
+                  <ShoppingCart className="h-5 w-5" /> Add to bag — {new Intl.NumberFormat('fr-DZ', { style: 'currency', currency: 'DZD' }).format(product.price * Math.max(1, qtyNum))}
                 </Button>
               </div>
             </>

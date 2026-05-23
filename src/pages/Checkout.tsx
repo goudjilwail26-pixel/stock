@@ -96,6 +96,7 @@ export default function Checkout() {
                     <div className="flex-1">
                       <h4 className="font-medium text-stokiloo-white text-base">{item.name}</h4>
                       <p className="text-stokiloo-grey mt-1 font-mono">{new Intl.NumberFormat('fr-DZ', { style: 'currency', currency: 'DZD' }).format(item.price)}</p>
+                      {item.unitLabel && <p className="text-[10px] text-stokiloo-grey mt-0.5">Qty: {item.unitLabel}</p>}
                     </div>
                     <div className="flex items-center gap-3">
                       <Input 
