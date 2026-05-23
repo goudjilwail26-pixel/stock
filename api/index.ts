@@ -1,8 +1,8 @@
 import 'dotenv/config';
 import express from 'express';
 import bcrypt from 'bcrypt';
-import { supabase } from '../src/lib/supabase/client.js';
-import { seedDatabase } from '../src/db.js';
+import { supabase } from './lib/supabase/client.js';
+import { seedDatabase } from './db.js';
 import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'stokiloo-dev-secret-change-in-production';

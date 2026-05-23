@@ -3,8 +3,8 @@ import express from "express";
 import path from "path";
 import { createServer as createViteServer } from "vite";
 import bcrypt from 'bcrypt';
-import { supabase } from './src/lib/supabase/client';
-import { seedDatabase } from './src/db';
+import { supabase } from './api/lib/supabase/client';
+import { seedDatabase } from './api/db';
 import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'stokiloo-dev-secret-change-in-production';
