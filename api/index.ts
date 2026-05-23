@@ -3,10 +3,17 @@ import express from 'express';
 import { supabase } from '../src/lib/supabase/client.js';
 import { seedDatabase } from '../src/db.js';
 
-await seedDatabase();
-
 const app = express();
 app.use(express.json());
+
+let initialized = false;
+app.use(async (req, res, next) => {
+  if (!initialized) {
+    initialized = true;
+    await seedDatabase();
+  }
+  next();
+});
 
 app.post('/api/auth/login', async (req, res) => {
   const { email, password } = req.body;
