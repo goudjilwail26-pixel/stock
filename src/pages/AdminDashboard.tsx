@@ -357,23 +357,23 @@ export default function AdminDashboard() {
             </div>
           )}
 
-          <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-2">
+          <div className="grid grid-cols-4 sm:grid-cols-5 lg:grid-cols-7 xl:grid-cols-10 gap-1.5">
             {products?.map(p => (
-              <div key={p.id} className="bg-stokiloo-dim border border-stokiloo-border p-2 flex flex-col">
-                <div className="aspect-[3/2] bg-stokiloo-black border border-stokiloo-border overflow-hidden mb-1">
+              <div key={p.id} className="bg-stokiloo-dim border border-stokiloo-border hover:border-stokiloo-gold/30 transition-all duration-200 p-1.5 flex flex-col group">
+                <div className="aspect-[5/2] bg-stokiloo-black border border-stokiloo-border overflow-hidden">
                   {p.image_url ? (
-                     <img src={p.image_url} alt="" className="w-full h-full object-cover opacity-80" crossOrigin="anonymous"/>
+                     <img src={p.image_url} alt="" className="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300" crossOrigin="anonymous"/>
                   ) : (
-                     <div className="w-full h-full bg-stokiloo-black flex items-center justify-center text-[9px] text-stokiloo-grey">IMG</div>
+                     <div className="w-full h-full bg-stokiloo-black flex items-center justify-center text-[8px] text-stokiloo-grey">IMG</div>
                   )}
                 </div>
-                <div className="min-w-0 mb-1">
-                  <h4 className="font-bold text-[11px] text-stokiloo-white truncate leading-tight" title={p.name}>{p.name}</h4>
-                  <p className="text-[8px] font-mono text-stokiloo-grey truncate">{p.sku}</p>
+                <div className="min-w-0 mt-1 mb-0.5">
+                  <h4 className="font-bold text-[10px] text-stokiloo-white truncate group-hover:text-stokiloo-gold transition-colors" title={p.name}>{p.name}</h4>
+                  <p className="text-[7px] font-mono text-stokiloo-grey truncate mt-px">{p.sku}</p>
                 </div>
-                <div className="flex items-center justify-between gap-1">
-                  <div className="font-bold text-[11px] text-stokiloo-gold font-mono truncate">{new Intl.NumberFormat('fr-DZ', { style: 'currency', currency: 'DZD' }).format(p.price)}</div>
-                  <div className={`text-[8px] font-bold px-1 py-0.5 shrink-0 ${p.stock_quantity > 0 ? 'bg-stokiloo-emerald/10 text-stokiloo-emerald' : 'bg-stokiloo-rose/10 text-stokiloo-rose'}`}>
+                <div className="flex items-center justify-between gap-0.5">
+                  <div className="font-bold text-[10px] text-stokiloo-gold font-mono truncate">{new Intl.NumberFormat('fr-DZ', { style: 'currency', currency: 'DZD' }).format(p.price)}</div>
+                  <div className={`text-[7px] font-bold px-1 py-px shrink-0 ${p.stock_quantity > 0 ? 'bg-stokiloo-emerald/10 text-stokiloo-emerald' : 'bg-stokiloo-rose/10 text-stokiloo-rose'}`}>
                     {p.stock_quantity}
                   </div>
                 </div>
