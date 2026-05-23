@@ -45,11 +45,11 @@ export const createWholesalerSchema = z.object({
   provides_category: z.string().min(1),
 })
 
-export function validate(schema: z.ZodSchema, data: unknown) {
+export function validate<T>(schema: z.ZodType<T>, data: unknown) {
   const result = schema.safeParse(data)
   if (!result.success) {
-    const error = result.error.errors[0]?.message || 'Validation error'
-    return { valid: false, error }
+    const messages = (result.error as any).issues?.map((i: any) => i.message).join(', ') || (result.error as any).errors?.[0]?.message || 'Validation error'
+    return { valid: false as const, error: messages }
   }
-  return { valid: true, data: result.data }
+  return { valid: true as const, data: result.data }
 }

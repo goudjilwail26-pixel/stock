@@ -357,23 +357,23 @@ export default function AdminDashboard() {
             </div>
           )}
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-3">
+          <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-2">
             {products?.map(p => (
-              <div key={p.id} className="bg-stokiloo-dim border border-stokiloo-border p-2.5 flex flex-col">
-                <div className="aspect-square bg-stokiloo-black border border-stokiloo-border overflow-hidden mb-2">
+              <div key={p.id} className="bg-stokiloo-dim border border-stokiloo-border p-2 flex flex-col">
+                <div className="aspect-[3/2] bg-stokiloo-black border border-stokiloo-border overflow-hidden mb-1">
                   {p.image_url ? (
                      <img src={p.image_url} alt="" className="w-full h-full object-cover opacity-80" crossOrigin="anonymous"/>
                   ) : (
-                     <div className="w-full h-full bg-stokiloo-black flex items-center justify-center text-[10px] text-stokiloo-grey">IMG</div>
+                     <div className="w-full h-full bg-stokiloo-black flex items-center justify-center text-[9px] text-stokiloo-grey">IMG</div>
                   )}
                 </div>
-                <div className="min-w-0 mb-1.5">
-                  <h4 className="font-bold text-xs text-stokiloo-white truncate leading-tight" title={p.name}>{p.name}</h4>
-                  <p className="text-[9px] font-mono text-stokiloo-grey mt-0.5 truncate">{p.sku}</p>
+                <div className="min-w-0 mb-1">
+                  <h4 className="font-bold text-[11px] text-stokiloo-white truncate leading-tight" title={p.name}>{p.name}</h4>
+                  <p className="text-[8px] font-mono text-stokiloo-grey truncate">{p.sku}</p>
                 </div>
-                <div className="mt-auto pt-1.5 border-t border-stokiloo-border flex items-center justify-between">
-                  <div className="font-bold text-xs text-stokiloo-gold font-mono">{new Intl.NumberFormat('fr-DZ', { style: 'currency', currency: 'DZD' }).format(p.price)}</div>
-                  <div className={`text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 ${p.stock_quantity > 0 ? 'bg-stokiloo-emerald/10 text-stokiloo-emerald' : 'bg-stokiloo-rose/10 text-stokiloo-rose'}`}>
+                <div className="flex items-center justify-between gap-1">
+                  <div className="font-bold text-[11px] text-stokiloo-gold font-mono truncate">{new Intl.NumberFormat('fr-DZ', { style: 'currency', currency: 'DZD' }).format(p.price)}</div>
+                  <div className={`text-[8px] font-bold px-1 py-0.5 shrink-0 ${p.stock_quantity > 0 ? 'bg-stokiloo-emerald/10 text-stokiloo-emerald' : 'bg-stokiloo-rose/10 text-stokiloo-rose'}`}>
                     {p.stock_quantity}
                   </div>
                 </div>
