@@ -47,8 +47,12 @@ export default function Checkout() {
       });
       
       if (res.ok) {
+        const data = await res.json();
         clearCart();
-        navigate('/');
+        navigate(`/order-confirmed?orderId=${data.orderId || ''}`);
+      } else {
+        const data = await res.json();
+        alert(data.error || 'Order failed');
       }
     } catch (e) {
       console.error(e);

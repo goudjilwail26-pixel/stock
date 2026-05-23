@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { ShoppingCart, Search } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { useToast } from '../context/ToastContext';
 import { Button, Card, CardContent, Input } from '../components/ui';
 import { Product } from '../types';
 
 export default function Catalog() {
   const { addToCart } = useCart();
+  const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState('');
   
   const { data: products, isLoading, error } = useQuery<Product[]>({
@@ -71,7 +73,7 @@ export default function Catalog() {
                 <Button 
                   size="default" 
                   variant={product.stock_quantity > 0 ? "default" : "secondary"}
-                  onClick={() => addToCart(product)}
+                  onClick={() => { addToCart(product); toast(`${product.name} added`, 'success'); }}
                   disabled={product.stock_quantity <= 0}
                   className="w-full font-medium"
                 >

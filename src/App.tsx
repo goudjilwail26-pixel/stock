@@ -3,7 +3,9 @@ import { BrowserRouter, Routes, Route, Navigate, Outlet, Link } from 'react-rout
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { CartProvider, useCart } from './context/CartContext';
-import { Store, UserCircle, ShoppingCart, LogOut, Package, LayoutDashboard } from 'lucide-react';
+import { ToastProvider } from './context/ToastContext';
+import { ErrorBoundary } from './components/ErrorBoundary';
+import { Store, ShoppingCart, LogOut, Package, LayoutDashboard } from 'lucide-react';
 import { Button } from './components/ui';
 
 import Login from './pages/Login';
@@ -11,6 +13,7 @@ import Register from './pages/Register';
 import Catalog from './pages/Catalog';
 import QuickReorder from './pages/QuickReorder';
 import Checkout from './pages/Checkout';
+import OrderConfirm from './pages/OrderConfirm';
 import AdminDashboard from './pages/AdminDashboard';
 
 const queryClient = new QueryClient();
@@ -106,27 +109,32 @@ function ProtectedRoute({ allowedRoles }: { allowedRoles: string[] }) {
 
 export default function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <CartProvider>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route element={<MainLayout />}>
-                <Route path="/" element={<Catalog />} />
-                <Route element={<ProtectedRoute allowedRoles={['buyer', 'admin']} />}>
-                  <Route path="/reorder" element={<QuickReorder />} />
-                  <Route path="/checkout" element={<Checkout />} />
-                </Route>
-                <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
-                  <Route path="/admin" element={<AdminDashboard />} />
-                </Route>
-              </Route>
-            </Routes>
-          </BrowserRouter>
-        </CartProvider>
-      </AuthProvider>
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <CartProvider>
+            <ToastProvider>
+              <BrowserRouter>
+                <Routes>
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/register" element={<Register />} />
+                  <Route element={<MainLayout />}>
+                    <Route path="/" element={<Catalog />} />
+                    <Route path="/order-confirmed" element={<OrderConfirm />} />
+                    <Route element={<ProtectedRoute allowedRoles={['buyer', 'admin']} />}>
+                      <Route path="/reorder" element={<QuickReorder />} />
+                      <Route path="/checkout" element={<Checkout />} />
+                    </Route>
+                    <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
+                      <Route path="/admin" element={<AdminDashboard />} />
+                    </Route>
+                  </Route>
+                </Routes>
+              </BrowserRouter>
+            </ToastProvider>
+          </CartProvider>
+        </AuthProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 }

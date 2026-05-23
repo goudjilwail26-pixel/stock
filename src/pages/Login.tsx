@@ -30,10 +30,10 @@ export default function Login() {
           navigate('/');
         }
       } else {
-        setError(data.error || 'Invalid credentials');
+        setError(data.error || 'Login failed');
       }
     } catch {
-      setError('An error occurred during login');
+      setError('Network error — check your connection');
     }
   };
 

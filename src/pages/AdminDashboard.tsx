@@ -7,9 +7,11 @@ import {
 import { Button, Card, CardContent, Input } from '../components/ui';
 import { Order, Metrics, Product, Wholesaler } from '../types';
 import { api } from '../lib/api';
+import { useToast } from '../context/ToastContext';
 
 export default function AdminDashboard() {
   const queryClient = useQueryClient();
+  const { toast } = useToast();
   const [activeTab, setActiveTab] = useState<'orders' | 'inventory' | 'wholesalers'>('orders');
   const [searchQuery, setSearchQuery] = useState('');
   
@@ -50,6 +52,7 @@ export default function AdminDashboard() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['adminOrders'] });
       queryClient.invalidateQueries({ queryKey: ['adminMetrics'] });
+      toast('Order status updated', 'success');
     }
   });
 
@@ -66,6 +69,7 @@ export default function AdminDashboard() {
       queryClient.invalidateQueries({ queryKey: ['adminMetrics'] });
       setShowProductForm(false);
       setNewProduct({ name: '', sku: '', price: 0, stock_quantity: 0, image_url: '', wholesaler_id: '' });
+      toast('Product published', 'success');
     }
   });
 
@@ -81,6 +85,7 @@ export default function AdminDashboard() {
       queryClient.invalidateQueries({ queryKey: ['adminWholesalers'] });
       setShowWholesalerForm(false);
       setNewWholesaler({ name: '', phone_number: '', provides_category: '' });
+      toast('Supplier saved', 'success');
     }
   });
 

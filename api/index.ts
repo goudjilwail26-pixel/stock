@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 import { supabase } from './lib/supabase/client.js';
 import { seedDatabase } from './db.js';
 import jwt from 'jsonwebtoken';
+import { registerSchema, loginSchema, createOrderSchema, createProductSchema, createWholesalerSchema, updateStatusSchema, validate } from './validate.js';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'stokiloo-dev-secret-change-in-production';
 
@@ -56,37 +57,21 @@ function adminRequired(req: any, res: any, next: any) {
 }
 
 app.post('/api/auth/register', async (req, res) => {
-  const { email, password, company_name, business_type, phone_number, wilaya } = req.body
-  if (!email || !password || !company_name) {
-    return res.status(400).json({ error: 'Email, password, and company name are required' })
-  }
+  const parsed = validate(registerSchema, req.body)
+  if (!parsed.valid) return res.status(400).json({ error: parsed.error })
 
-  const { data: existing } = await supabase
-    .from('profiles')
-    .select('id')
-    .eq('email', email)
-    .single()
+  const { email, password, company_name, business_type, phone_number, wilaya } = parsed.data
 
-  if (existing) {
-    return res.status(409).json({ error: 'Email already registered' })
-  }
+  const { data: existing } = await supabase.from('profiles').select('id').eq('email', email).single()
+  if (existing) return res.status(409).json({ error: 'Email already registered' })
 
   const hashed = await bcrypt.hash(password, 10)
   const role = email === ADMIN_EMAIL ? 'admin' : 'buyer'
 
-  const { data, error } = await supabase
-    .from('profiles')
-    .insert({
-      email,
-      password: hashed,
-      company_name,
-      business_type: business_type || '',
-      phone_number: phone_number || '',
-      wilaya: wilaya || '',
-      role,
-    })
-    .select('id, email, company_name, role, wilaya')
-    .single()
+  const { data, error } = await supabase.from('profiles').insert({
+    email, password: hashed, company_name,
+    business_type: business_type || '', phone_number: phone_number || '', wilaya: wilaya || '', role,
+  }).select('id, email, company_name, role, wilaya').single()
 
   if (error) return res.status(500).json({ error: error.message })
 
@@ -95,25 +80,16 @@ app.post('/api/auth/register', async (req, res) => {
 })
 
 app.post('/api/auth/login', async (req, res) => {
-  const { email, password } = req.body
-  if (!email || !password) {
-    return res.status(400).json({ error: 'Email and password are required' })
-  }
+  const parsed = validate(loginSchema, req.body)
+  if (!parsed.valid) return res.status(400).json({ error: parsed.error })
 
-  const { data: user, error } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('email', email)
-    .single()
+  const { email, password } = parsed.data
 
-  if (!user || error) {
-    return res.status(401).json({ error: 'Invalid credentials' })
-  }
+  const { data: user, error } = await supabase.from('profiles').select('*').eq('email', email).single()
+  if (!user || error) return res.status(401).json({ error: 'Invalid email or password' })
 
   const valid = await bcrypt.compare(password, user.password)
-  if (!valid) {
-    return res.status(401).json({ error: 'Invalid credentials' })
-  }
+  if (!valid) return res.status(401).json({ error: 'Invalid email or password' })
 
   const payload = { id: user.id, email: user.email, company_name: user.company_name, role: user.role, wilaya: user.wilaya }
   const token = signToken({ userId: user.id, email: user.email, role: user.role })
@@ -169,24 +145,19 @@ app.get('/api/orders', authRequired, async (req: any, res) => {
 })
 
 app.post('/api/orders', authRequired, async (req: any, res) => {
-  const { total_price, wilaya, items } = req.body
-  if (!items || !items.length) {
-    return res.status(400).json({ error: 'Invalid order data' })
-  }
+  const parsed = validate(createOrderSchema, req.body)
+  if (!parsed.valid) return res.status(400).json({ error: parsed.error })
 
-  const { data: order, error: orderError } = await supabase
-    .from('orders')
-    .insert({ buyer_id: req.user.userId, status: 'pending', total_price, wilaya })
-    .select()
-    .single()
+  const { total_price, wilaya, items } = parsed.data
+
+  const { data: order, error: orderError } = await supabase.from('orders').insert({
+    buyer_id: req.user.userId, status: 'pending', total_price, wilaya
+  }).select().single()
 
   if (orderError) return res.status(500).json({ error: orderError.message })
 
   const orderItems = items.map((item: any) => ({
-    order_id: order.id,
-    product_id: item.product_id,
-    quantity: item.quantity,
-    price_at_purchase: item.price_at_purchase,
+    order_id: order.id, product_id: item.product_id, quantity: item.quantity, price_at_purchase: item.price_at_purchase,
   }))
 
   const { error: itemsError } = await supabase.from('order_items').insert(orderItems)
@@ -221,8 +192,9 @@ app.get('/api/admin/orders', adminRequired, async (req, res) => {
 
 app.patch('/api/admin/orders/:id/status', adminRequired, async (req, res) => {
   const { id } = req.params
-  const { status } = req.body
-  const { error } = await supabase.from('orders').update({ status }).eq('id', id)
+  const parsed = validate(updateStatusSchema, req.body)
+  if (!parsed.valid) return res.status(400).json({ error: parsed.error })
+  const { error } = await supabase.from('orders').update({ status: parsed.data.status }).eq('id', id)
   if (error) return res.status(500).json({ error: error.message })
   res.json({ success: true })
 })
@@ -245,15 +217,13 @@ app.get('/api/admin/products', adminRequired, async (req, res) => {
 })
 
 app.post('/api/admin/products', adminRequired, async (req, res) => {
-  const { wholesaler_id, name, description, image_url, sku, price, stock_quantity } = req.body
+  const parsed = validate(createProductSchema, req.body)
+  if (!parsed.valid) return res.status(400).json({ error: parsed.error })
+  const { name, description, image_url, sku, price, stock_quantity, wholesaler_id } = parsed.data
   const { data, error } = await supabase.from('products').insert({
-    wholesaler_id: wholesaler_id || '00000000-0000-0000-0000-000000000010',
-    name, description, image_url, sku,
-    price: price || 0,
-    stock_quantity: stock_quantity || 0,
-    in_stock: (stock_quantity || 0) > 0,
+    wholesaler_id, name, description, image_url, sku, price,
+    stock_quantity, in_stock: stock_quantity > 0,
   }).select().single()
-
   if (error) return res.status(500).json({ error: error.message })
   res.json({ success: true, id: data.id })
 })
@@ -273,8 +243,9 @@ app.get('/api/admin/wholesalers', adminRequired, async (req, res) => {
 })
 
 app.post('/api/admin/wholesalers', adminRequired, async (req, res) => {
-  const { name, phone_number, provides_category } = req.body
-  const { data, error } = await supabase.from('wholesalers').insert({ name, phone_number, provides_category }).select().single()
+  const parsed = validate(createWholesalerSchema, req.body)
+  if (!parsed.valid) return res.status(400).json({ error: parsed.error })
+  const { data, error } = await supabase.from('wholesalers').insert(parsed.data).select().single()
   if (error) return res.status(500).json({ error: error.message })
   res.json({ success: true, id: data.id })
 })

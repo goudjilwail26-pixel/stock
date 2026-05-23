@@ -2,6 +2,16 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Button, Input, Card, CardContent, CardHeader, CardTitle } from '../components/ui';
+import { cn } from '../lib/utils';
+
+function PasswordCheck({ label, valid }: { label: string; valid: boolean }) {
+  return (
+    <div className={cn('flex items-center gap-2 text-xs', valid ? 'text-stokiloo-emerald' : 'text-stokiloo-grey')}>
+      <span>{valid ? '✓' : '○'}</span>
+      <span>{label}</span>
+    </div>
+  )
+}
 
 export default function Register() {
   const [email, setEmail] = useState('');
@@ -14,9 +24,17 @@ export default function Register() {
   const { login } = useAuth();
   const navigate = useNavigate();
 
+  const checks = {
+    min8: password.length >= 8,
+    hasLetter: /[A-Za-z]/.test(password),
+    hasNumber: /[0-9]/.test(password),
+  }
+  const passwordOk = checks.min8 && checks.hasLetter && checks.hasNumber
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    if (!passwordOk) { setError('Password does not meet requirements'); return }
     setLoading(true);
 
     try {
@@ -39,7 +57,7 @@ export default function Register() {
         setError(data.error || 'Registration failed');
       }
     } catch {
-      setError('An error occurred during registration');
+      setError('Network error — check your connection');
     } finally {
       setLoading(false);
     }
@@ -65,7 +83,14 @@ export default function Register() {
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium leading-none text-stokiloo-silver" htmlFor="password">Password *</label>
-              <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} className="bg-stokiloo-black border-stokiloo-border" />
+              <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} className="bg-stokiloo-black border-stokiloo-border" />
+              {password.length > 0 && (
+                <div className="pt-1 space-y-0.5">
+                  <PasswordCheck label="At least 8 characters" valid={checks.min8} />
+                  <PasswordCheck label="Contains a letter" valid={checks.hasLetter} />
+                  <PasswordCheck label="Contains a number" valid={checks.hasNumber} />
+                </div>
+              )}
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium leading-none text-stokiloo-silver" htmlFor="companyName">Company Name *</label>

@@ -6,10 +6,12 @@ import { useAuth } from '../context/AuthContext';
 import { Button, Card, CardContent } from '../components/ui';
 import { Order, OrderItem } from '../types';
 import { api } from '../lib/api';
+import { useToast } from '../context/ToastContext';
 
 export default function QuickReorder() {
   const { user } = useAuth();
   const { addToCart, items: cartItems } = useCart();
+  const { toast } = useToast();
   
   const { data: orders, isLoading } = useQuery<Order[]>({
     queryKey: ['orders', user?.id],
@@ -73,17 +75,20 @@ export default function QuickReorder() {
                 <div className="w-full sm:w-auto">
                   <Button 
                     className="w-full sm:w-auto min-w-[120px] gap-2" 
-                    onClick={() => addToCart({ 
-                      id: item.product_id, 
-                      name: item.name || '', 
-                      price: item.price_at_purchase, 
-                      image_url: item.image_url || '',
-                      supplier_id: '',
-                      description: '',
-                      sku: '',
-                      stock_quantity: 999,
-                      status: 'active'
-                    })}
+                    onClick={() => { 
+                      addToCart({ 
+                        id: item.product_id, 
+                        name: item.name || '', 
+                        price: item.price_at_purchase, 
+                        image_url: item.image_url || '',
+                        supplier_id: '',
+                        description: '',
+                        sku: '',
+                        stock_quantity: 999,
+                        status: 'active'
+                      });
+                      toast(`${item.name || 'Item'} added`, 'success');
+                    }}
                   >
                     <Plus className="h-4 w-4" /> Add 1
                   </Button>

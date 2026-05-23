@@ -54,3 +54,8 @@ body {
 ::-webkit-scrollbar-thumb:hover { background: var(--color-stokiloo-grey); }
 
 ::selection { background: var(--color-stokiloo-gold); color: var(--color-stokiloo-black); }
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
