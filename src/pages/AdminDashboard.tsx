@@ -357,21 +357,20 @@ export default function AdminDashboard() {
             </div>
           )}
 
-          <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 xl:grid-cols-16 gap-1">
+          <div className="grid grid-cols-5 sm:grid-cols-7 md:grid-cols-9 lg:grid-cols-12 gap-1">
             {products?.map(p => (
               <div key={p.id} className="bg-stokiloo-dim border border-stokiloo-border overflow-hidden group hover:border-stokiloo-gold/40 transition-colors">
-                <div className="aspect-square bg-stokiloo-black overflow-hidden">
+                <div className="h-12 bg-stokiloo-black overflow-hidden">
                   {p.image_url ? (
                      <img src={p.image_url} alt="" className="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300" crossOrigin="anonymous"/>
                   ) : (
-                     <div className="w-full h-full bg-stokiloo-black flex items-center justify-center text-[9px] text-stokiloo-grey">IMG</div>
+                     <div className="w-full h-full bg-stokiloo-black flex items-center justify-center text-[8px] text-stokiloo-grey">IMG</div>
                   )}
                 </div>
-                <div className="p-1 min-w-0">
-                  <h4 className="font-bold text-[8px] text-stokiloo-white truncate group-hover:text-stokiloo-gold transition-colors leading-tight" title={p.name}>{p.name}</h4>
-                  <p className="text-[6px] font-mono text-stokiloo-grey truncate">{p.sku}</p>
-                  <div className="flex items-center justify-between gap-px mt-0.5 pt-0.5 border-t border-stokiloo-border">
-                    <span className="font-bold text-[8px] text-stokiloo-gold font-mono truncate">{new Intl.NumberFormat('fr-DZ', { style: 'currency', currency: 'DZD' }).format(p.price)}</span>
+                <div className="p-0.5">
+                  <div className="font-bold text-[8px] text-stokiloo-white truncate leading-tight" title={p.name}>{p.name}</div>
+                  <div className="flex items-center justify-between mt-px">
+                    <span className="font-bold text-[8px] text-stokiloo-gold font-mono">{new Intl.NumberFormat('fr-DZ', { style: 'currency', currency: 'DZD' }).format(p.price)}</span>
                     <span className={`text-[6px] font-bold ${p.stock_quantity > 0 ? 'text-stokiloo-emerald' : 'text-stokiloo-rose'}`}>{p.stock_quantity}</span>
                   </div>
                 </div>
