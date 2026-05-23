@@ -1,45 +1,4 @@
 import { supabase } from './lib/supabase/client'
-import postgres from 'postgres'
-import fs from 'fs'
-import path from 'path'
-
-export async function ensureDatabase() {
-  const hasEmail = await supabase.from('profiles').select('email').limit(1).maybeSingle()
-
-  if (!hasEmail.error) return true
-
-  if (hasEmail.error?.message?.includes('column')) {
-    console.log('')
-    console.log('  Existing tables need migration.')
-    console.log('')
-  }
-
-  if (hasEmail.error?.message?.includes('table')) {
-    console.log('')
-    console.log('  Tables not found in Supabase.')
-    console.log('')
-  }
-
-  const projectRef = process.env.VITE_SUPABASE_URL?.match(/https:\/\/(.+)\.supabase/)?.[1] || 'gubrmrlqzozqwpcfjeez'
-  const sqlUrl = `https://supabase.com/dashboard/project/${projectRef}/sql/new`
-
-  console.log('  To fix, run this SQL in your Supabase dashboard:')
-  console.log('  ' + sqlUrl)
-  console.log('')
-  console.log('  SQL to execute:')
-  console.log('  ' + '─'.repeat(50))
-
-  const sql = fs.readFileSync(
-    path.join(process.cwd(), 'supabase/migrations/001_schema.sql'),
-    'utf-8'
-  )
-  console.log(sql)
-  console.log('  ' + '─'.repeat(50))
-  console.log('  Then restart the server.')
-  console.log('')
-
-  return false
-}
 
 export async function seedDatabase() {
   const profiles = [
@@ -59,10 +18,9 @@ export async function seedDatabase() {
     { id: '00000000-0000-0000-0000-000000000023', wholesaler_id: '00000000-0000-0000-0000-000000000010', name: 'Croissant Dough (Frozen) x50', description: 'Ready to bake classic butter croissants.', image_url: 'https://images.unsplash.com/photo-1555507036-ab1f40ce88cb?q=80&w=400&auto=format&fit=crop', sku: 'CRO-FZ-004', price: 3500, stock_quantity: 30, in_stock: true },
   ]
 
-  const now = new Date().toISOString()
   const orders = [
     { id: '00000000-0000-0000-0000-000000000030', buyer_id: '00000000-0000-0000-0000-000000000002', status: 'delivered', total_price: 8400, delivery_date: '2023-10-01', created_at: '2023-09-28T10:00:00Z', wilaya: '16 - Alger' },
-    { id: '00000000-0000-0000-0000-000000000031', buyer_id: '00000000-0000-0000-0000-000000000002', status: 'pending', total_price: 4500, delivery_date: null, created_at: now, wilaya: '16 - Alger' },
+    { id: '00000000-0000-0000-0000-000000000031', buyer_id: '00000000-0000-0000-0000-000000000002', status: 'pending', total_price: 4500, delivery_date: null, created_at: new Date().toISOString(), wilaya: '16 - Alger' },
   ]
 
   const orderItems = [
@@ -72,29 +30,18 @@ export async function seedDatabase() {
   ]
 
   for (const profile of profiles) {
-    const { error } = await supabase.from('profiles').upsert(profile, { onConflict: 'id' })
-    if (error) console.error('Seed profile error:', error.message)
+    await supabase.from('profiles').upsert(profile, { onConflict: 'id' })
   }
-
   for (const w of wholesalers) {
-    const { error } = await supabase.from('wholesalers').upsert(w, { onConflict: 'id' })
-    if (error) console.error('Seed wholesaler error:', error.message)
+    await supabase.from('wholesalers').upsert(w, { onConflict: 'id' })
   }
-
   for (const p of products) {
-    const { error } = await supabase.from('products').upsert(p, { onConflict: 'id' })
-    if (error) console.error('Seed product error:', error.message)
+    await supabase.from('products').upsert(p, { onConflict: 'id' })
   }
-
   for (const o of orders) {
-    const { error } = await supabase.from('orders').upsert(o, { onConflict: 'id' })
-    if (error) console.error('Seed order error:', error.message)
+    await supabase.from('orders').upsert(o, { onConflict: 'id' })
   }
-
   for (const oi of orderItems) {
-    const { error } = await supabase.from('order_items').upsert(oi, { onConflict: 'id' })
-    if (error) console.error('Seed order_item error:', error.message)
+    await supabase.from('order_items').upsert(oi, { onConflict: 'id' })
   }
-
-  console.log('Supabase seeded successfully')
 }

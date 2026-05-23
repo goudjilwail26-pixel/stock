@@ -3,7 +3,7 @@ import express from "express";
 import path from "path";
 import { createServer as createViteServer } from "vite";
 import { supabase } from './src/lib/supabase/client';
-import { ensureDatabase, seedDatabase } from './src/db';
+import { seedDatabase } from './src/db';
 
 async function startServer() {
   const app = express();
@@ -11,10 +11,7 @@ async function startServer() {
 
   app.use(express.json());
 
-  const dbReady = await ensureDatabase();
-  if (dbReady) {
-    await seedDatabase();
-  }
+  await seedDatabase();
 
   app.post("/api/auth/login", async (req, res) => {
     const { email, password } = req.body;
