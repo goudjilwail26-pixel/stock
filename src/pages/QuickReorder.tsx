@@ -5,6 +5,7 @@ import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { Button, Card, CardContent } from '../components/ui';
 import { Order, OrderItem } from '../types';
+import { api } from '../lib/api';
 
 export default function QuickReorder() {
   const { user } = useAuth();
@@ -13,7 +14,7 @@ export default function QuickReorder() {
   const { data: orders, isLoading } = useQuery<Order[]>({
     queryKey: ['orders', user?.id],
     queryFn: async () => {
-      const res = await fetch(`/api/orders?userId=${user?.id}`);
+      const res = await api(`/api/orders?userId=${user?.id}`);
       return res.json();
     },
     enabled: !!user?.id

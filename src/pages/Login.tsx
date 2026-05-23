@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Button, Input, Card, CardContent, CardHeader, CardTitle } from '../components/ui';
 
@@ -23,16 +23,16 @@ export default function Login() {
       const data = await res.json();
       
       if (data.success) {
-        login(data.user);
+        login(data.user, data.token);
         if (data.user.role === 'admin') {
           navigate('/admin');
         } else {
           navigate('/');
         }
       } else {
-        setError(data.message || 'Login failed');
+        setError(data.error || 'Invalid credentials');
       }
-    } catch (err) {
+    } catch {
       setError('An error occurred during login');
     }
   };
@@ -56,7 +56,7 @@ export default function Login() {
               <Input
                 id="email"
                 type="email"
-                placeholder="buyer@b2b.com or admin@b2b.com"
+                placeholder="your@company.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -67,7 +67,7 @@ export default function Login() {
               <Input
                 id="password"
                 type="password"
-                placeholder="password (e.g. buyer123)"
+                placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -78,10 +78,11 @@ export default function Login() {
               Sign In
             </Button>
           </form>
-          <div className="mt-6 border-t border-stokiloo-border pt-4 text-xs text-stokiloo-grey space-y-1 text-center">
-            <p>Mock accounts:</p>
-            <p>buyer@b2b.com / buyer123</p>
-            <p>admin@b2b.com / admin123</p>
+          <div className="mt-6 border-t border-stokiloo-border pt-4 text-center">
+            <p className="text-sm text-stokiloo-grey">
+              Don't have an account?{' '}
+              <Link to="/register" className="text-stokiloo-gold hover:underline font-medium">Sign up</Link>
+            </p>
           </div>
         </CardContent>
       </Card>

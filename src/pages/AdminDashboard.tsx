@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { Button, Card, CardContent, Input } from '../components/ui';
 import { Order, Metrics, Product, Wholesaler } from '../types';
+import { api } from '../lib/api';
 
 export default function AdminDashboard() {
   const queryClient = useQueryClient();
@@ -20,27 +21,27 @@ export default function AdminDashboard() {
 
   const { data: metrics } = useQuery<Metrics>({
     queryKey: ['adminMetrics'],
-    queryFn: async () => (await fetch('/api/admin/metrics')).json()
+    queryFn: async () => (await api('/api/admin/metrics')).json()
   });
 
   const { data: orders } = useQuery<Order[]>({
     queryKey: ['adminOrders'],
-    queryFn: async () => (await fetch('/api/admin/orders')).json()
+    queryFn: async () => (await api('/api/admin/orders')).json()
   });
 
   const { data: products } = useQuery<Product[]>({
     queryKey: ['adminProducts'],
-    queryFn: async () => (await fetch('/api/admin/products')).json()
+    queryFn: async () => (await api('/api/admin/products')).json()
   });
 
   const { data: wholesalers } = useQuery<Wholesaler[]>({
     queryKey: ['adminWholesalers'],
-    queryFn: async () => (await fetch('/api/admin/wholesalers')).json()
+    queryFn: async () => (await api('/api/admin/wholesalers')).json()
   });
 
   const updateStatus = useMutation({
     mutationFn: async ({ id, status }: { id: string, status: string }) => {
-      await fetch(`/api/admin/orders/${id}/status`, {
+      await api(`/api/admin/orders/${id}/status`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status })
@@ -54,7 +55,7 @@ export default function AdminDashboard() {
 
   const createProduct = useMutation({
     mutationFn: async (data: any) => {
-      await fetch('/api/admin/products', {
+      await api('/api/admin/products', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
@@ -70,7 +71,7 @@ export default function AdminDashboard() {
 
   const createWholesaler = useMutation({
     mutationFn: async (data: any) => {
-      await fetch('/api/admin/wholesalers', {
+      await api('/api/admin/wholesalers', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)

@@ -7,6 +7,7 @@ import { Store, UserCircle, ShoppingCart, LogOut, Package, LayoutDashboard } fro
 import { Button } from './components/ui';
 
 import Login from './pages/Login';
+import Register from './pages/Register';
 import Catalog from './pages/Catalog';
 import QuickReorder from './pages/QuickReorder';
 import Checkout from './pages/Checkout';
@@ -111,6 +112,7 @@ export default function App() {
           <BrowserRouter>
             <Routes>
               <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
               <Route element={<MainLayout />}>
                 <Route path="/" element={<Catalog />} />
                 <Route element={<ProtectedRoute allowedRoles={['buyer', 'admin']} />}>

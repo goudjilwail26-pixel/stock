@@ -4,6 +4,7 @@ import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input } from '../components/ui';
 import { Trash2, ShieldCheck, MapPin, ShoppingCart } from 'lucide-react';
+import { api } from '../lib/api';
 
 const WILAYAS = [
   "01 - Adrar", "02 - Chlef", "03 - Laghouat", "04 - Oum El Bouaghi", "05 - Batna",
@@ -39,7 +40,7 @@ export default function Checkout() {
         items: items.map(i => ({ product_id: i.id, quantity: i.quantity, price_at_purchase: i.price }))
       };
       
-      const res = await fetch('/api/orders', {
+      const res = await api('/api/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)

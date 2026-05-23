@@ -1,11 +1,6 @@
 import { supabase } from './lib/supabase/client'
 
 export async function seedDatabase() {
-  const profiles = [
-    { id: '00000000-0000-0000-0000-000000000001', email: 'admin@b2b.com', password: 'admin123', company_name: 'Super Admin Corp', business_type: 'admin', phone_number: '0000000000', wilaya: '16 - Alger', role: 'admin' },
-    { id: '00000000-0000-0000-0000-000000000002', email: 'buyer@b2b.com', password: 'buyer123', company_name: 'City Cafe', business_type: 'café', phone_number: '0555123456', wilaya: '16 - Alger', role: 'buyer' },
-  ]
-
   const wholesalers = [
     { id: '00000000-0000-0000-0000-000000000010', name: 'Wholesale Foods Ltd', phone_number: '0555000111', provides_category: 'Coffee, Tea, Baking Supplies' },
     { id: '00000000-0000-0000-0000-000000000011', name: 'Global Produce DZ', phone_number: '0555000222', provides_category: 'Fresh Produce, Dairy' },
@@ -18,30 +13,10 @@ export async function seedDatabase() {
     { id: '00000000-0000-0000-0000-000000000023', wholesaler_id: '00000000-0000-0000-0000-000000000010', name: 'Croissant Dough (Frozen) x50', description: 'Ready to bake classic butter croissants.', image_url: 'https://images.unsplash.com/photo-1555507036-ab1f40ce88cb?q=80&w=400&auto=format&fit=crop', sku: 'CRO-FZ-004', price: 3500, stock_quantity: 30, in_stock: true },
   ]
 
-  const orders = [
-    { id: '00000000-0000-0000-0000-000000000030', buyer_id: '00000000-0000-0000-0000-000000000002', status: 'delivered', total_price: 8400, delivery_date: '2023-10-01', created_at: '2023-09-28T10:00:00Z', wilaya: '16 - Alger' },
-    { id: '00000000-0000-0000-0000-000000000031', buyer_id: '00000000-0000-0000-0000-000000000002', status: 'pending', total_price: 4500, delivery_date: null, created_at: new Date().toISOString(), wilaya: '16 - Alger' },
-  ]
-
-  const orderItems = [
-    { id: '00000000-0000-0000-0000-000000000040', order_id: '00000000-0000-0000-0000-000000000030', product_id: '00000000-0000-0000-0000-000000000020', quantity: 2, price_at_purchase: 2500 },
-    { id: '00000000-0000-0000-0000-000000000041', order_id: '00000000-0000-0000-0000-000000000030', product_id: '00000000-0000-0000-0000-000000000023', quantity: 1, price_at_purchase: 3400 },
-    { id: '00000000-0000-0000-0000-000000000042', order_id: '00000000-0000-0000-0000-000000000031', product_id: '00000000-0000-0000-0000-000000000022', quantity: 10, price_at_purchase: 450 },
-  ]
-
-  for (const profile of profiles) {
-    await supabase.from('profiles').upsert(profile, { onConflict: 'id' })
-  }
   for (const w of wholesalers) {
     await supabase.from('wholesalers').upsert(w, { onConflict: 'id' })
   }
   for (const p of products) {
     await supabase.from('products').upsert(p, { onConflict: 'id' })
-  }
-  for (const o of orders) {
-    await supabase.from('orders').upsert(o, { onConflict: 'id' })
-  }
-  for (const oi of orderItems) {
-    await supabase.from('order_items').upsert(oi, { onConflict: 'id' })
   }
 }
