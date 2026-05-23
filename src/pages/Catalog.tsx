@@ -46,47 +46,54 @@ export default function Catalog() {
         </div>
       </div>
   
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 sm:gap-8">
-        {filteredProducts?.map((product) => (
-          <Link to={`/product/${product.id}`} key={product.id} className="block group">
-            <Card className="overflow-hidden flex flex-col border-stokiloo-border hover:border-stokiloo-gold/30 transition-all duration-300 bg-stokiloo-dim h-full">
-              <div className="aspect-[4/5] bg-stokiloo-black relative overflow-hidden">
-                <img 
-                  src={product.image_url} 
-                  alt={product.name} 
-                  className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105 opacity-80 group-hover:opacity-100"
-                  crossOrigin="anonymous"
-                />
-                {product.stock_quantity <= 0 && (
-                  <div className="absolute inset-0 bg-stokiloo-black/80 backdrop-blur-[2px] flex items-center justify-center">
-                    <span className="bg-stokiloo-gold text-stokiloo-black text-xs font-bold px-3 py-1.5 tracking-wider uppercase">Sold Out</span>
-                  </div>
-                )}
-              </div>
-              <CardContent className="p-5 flex flex-col flex-1">
-                <div className="flex-1">
-                  <p className="text-[10px] font-semibold text-stokiloo-grey uppercase tracking-wider mb-2 font-mono">SKU: {product.sku}</p>
-                  <h3 className="font-medium text-base md:text-lg text-stokiloo-white leading-snug line-clamp-2 group-hover:text-stokiloo-gold transition-colors">{product.name}</h3>
-                  <div className="text-lg md:text-xl font-mono text-stokiloo-gold mt-3">
-                    {new Intl.NumberFormat('fr-DZ', { style: 'currency', currency: 'DZD' }).format(product.price)}
-                  </div>
-                </div>
-                <div className="mt-5 pt-5 border-t border-stokiloo-border flex items-center justify-between">
-                  <Button 
-                    size="default" 
-                    variant={product.stock_quantity > 0 ? "default" : "secondary"}
-                    onClick={(e) => { e.preventDefault(); addToCart(product); toast(`${product.name} added`, 'success'); }}
-                    disabled={product.stock_quantity <= 0}
-                    className="w-full font-medium"
-                  >
-                    {product.stock_quantity > 0 ? 'Add to bag' : 'Unavailable'}
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
-        ))}
-      </div>
+       <div className="grid grid-cols-4 gap-4">
+         {filteredProducts?.map((product) => (
+           <Link to={`/product/${product.id}`} key={product.id} className="block group">
+             <Card className="overflow-hidden flex flex-col border-stokiloo-border hover:border-stokiloo-gold/30 transition-all duration-300 bg-stokiloo-dim">
+               <div className="aspect-square bg-stokiloo-black relative overflow-hidden">
+                 <img 
+                   src={product.image_url} 
+                   alt={product.name} 
+                   className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105 opacity-80 group-hover:opacity-100"
+                   crossOrigin="anonymous"
+                 />
+                 {product.stock_quantity <= 0 && (
+                   <div className="absolute inset-0 bg-stokiloo-black/80 backdrop-blur-[2px] flex items-center justify-center">
+                     <span className="bg-stokiloo-gold text-stokiloo-black text-xs font-bold px-3 py-1.5 tracking-wider uppercase">Sold Out</span>
+                   </div>
+                 )}
+               </div>
+               <CardContent className="p-4 flex flex-col flex-1 gap-3">
+                 <div className="flex-1">
+                   <p className="text-[9px] font-medium text-stokiloo-grey uppercase tracking-wider mb-1 font-mono">SKU: {product.sku}</p>
+                   <h3 className="font-semibold text-base text-stokiloo-white leading-tight line-clamp-2 group-hover:text-stokiloo-gold transition-colors">{product.name}</h3>
+                   <div className="flex items-center justify-between space-x-2">
+                     <div className="text-right flex-1">
+                       <span className="text-[8px] font-medium text-stokiloo-grey">Price:</span>
+                       <p className="text-[10px] font-bold text-stokiloo-gold">${new Intl.NumberFormat('fr-DZ', { style: 'currency', currency: 'DZD' }).format(product.price)}</p>
+                     </div>
+                     <div className="text-left flex-1">
+                       <span className="text-[8px] font-medium text-stokiloo-grey">Stock:</span>
+                       <p className="text-[10px] font-medium ${product.stock_quantity > 0 ? 'text-stokiloo-emerald' : 'text-stokiloo-rose'}">{product.stock_quantity}</p>
+                     </div>
+                   </div>
+                 </div>
+                 <div className="mt-auto pt-2">
+                   <Button 
+                     size="default" 
+                     variant={product.stock_quantity > 0 ? "default" : "secondary"}
+                     onClick={(e) => { e.preventDefault(); addToCart(product); toast(`${product.name} added`, 'success'); }}
+                     disabled={product.stock_quantity <= 0}
+                     className="w-full font-medium text-[9px] py-2 px-4"
+                   >
+                     {product.stock_quantity > 0 ? 'Add to bag' : 'Unavailable'}
+                   </Button>
+                 </div>
+               </CardContent>
+             </Card>
+           </Link>
+         ))}
+       </div>
     </div>
   );
 }

@@ -1,0 +1,208 @@
+/* [project]/app/page.module.css [app-client] (css) */
+.page-module__E0kJGG__page {
+  flex-direction: column;
+  min-height: 100vh;
+  display: flex;
+}
+
+.page-module__E0kJGG__navContainer {
+  justify-content: space-between;
+  align-items: center;
+  height: 72px;
+  display: flex;
+}
+
+.page-module__E0kJGG__logo {
+  font-family: var(--font-display);
+  color: var(--foreground);
+  align-items: center;
+  font-size: 24px;
+  font-weight: 800;
+  display: flex;
+}
+
+.page-module__E0kJGG__logo span {
+  color: var(--primary);
+}
+
+.page-module__E0kJGG__searchWrapper {
+  flex: 1;
+  max-width: 500px;
+  margin: 0 24px;
+}
+
+.page-module__E0kJGG__navActions {
+  align-items: center;
+  gap: 16px;
+  display: flex;
+}
+
+.page-module__E0kJGG__userEmail {
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.page-module__E0kJGG__cartButton {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  color: var(--foreground);
+  transition: all var(--transition-fast);
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  display: flex;
+  position: relative;
+}
+
+.page-module__E0kJGG__cartButton:hover {
+  background: var(--background);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.page-module__E0kJGG__cartIcon {
+  width: 20px;
+  height: 20px;
+}
+
+.page-module__E0kJGG__cartCount {
+  background: var(--primary);
+  color: #fff;
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  width: 18px;
+  height: 18px;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  box-shadow: 0 2px 4px #4f46e54d;
+}
+
+.page-module__E0kJGG__hero {
+  background: linear-gradient(135deg, var(--primary-light) 0%, #d946ef0d 100%);
+  border-bottom: 1px solid var(--card-border);
+  text-align: center;
+  margin-bottom: 48px;
+  padding: 80px 0 60px;
+}
+
+.page-module__E0kJGG__heroContent {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.page-module__E0kJGG__heroTitle {
+  background: linear-gradient(135deg, var(--foreground) 30%, var(--primary) 100%);
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  margin-bottom: 16px;
+  font-size: 48px;
+  line-height: 1.15;
+}
+
+.page-module__E0kJGG__heroSubtitle {
+  color: var(--text-muted);
+  max-width: 600px;
+  margin: 0 auto;
+  font-size: 18px;
+}
+
+.page-module__E0kJGG__sectionHeader {
+  margin-bottom: 32px;
+}
+
+.page-module__E0kJGG__sectionTitle {
+  font-size: 28px;
+}
+
+.page-module__E0kJGG__sectionSubtitle {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.page-module__E0kJGG__grid {
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+  display: grid;
+}
+
+.page-module__E0kJGG__cardHeader {
+  border-bottom: 1px solid var(--card-border);
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  display: flex;
+}
+
+.page-module__E0kJGG__wholesalerBadge {
+  color: var(--text-muted);
+  background: var(--background);
+  border-radius: var(--radius-sm);
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.page-module__E0kJGG__cardBody {
+  padding: 20px;
+}
+
+.page-module__E0kJGG__productName {
+  color: var(--foreground);
+  margin-bottom: 16px;
+  font-size: 18px;
+}
+
+.page-module__E0kJGG__pricingRow {
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  display: grid;
+}
+
+.page-module__E0kJGG__label {
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: .05em;
+  margin-bottom: 2px;
+  font-size: 11px;
+  font-weight: 500;
+  display: block;
+}
+
+.page-module__E0kJGG__price {
+  color: var(--primary);
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.page-module__E0kJGG__stock {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.page-module__E0kJGG__cardFooter {
+  background: var(--background);
+  border-top: 1px solid var(--card-border);
+  padding: 16px 20px;
+}
+
+.page-module__E0kJGG__loader, .page-module__E0kJGG__noResults {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 60px 0;
+}
+
+.page-module__E0kJGG__noResults h3 {
+  color: var(--foreground);
+  margin-bottom: 8px;
+  font-size: 20px;
+}
+
+/*# sourceMappingURL=app_page_module_css_0w3-wzy._.single.css.map*/

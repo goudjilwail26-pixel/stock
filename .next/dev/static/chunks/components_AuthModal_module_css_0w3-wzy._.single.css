@@ -1,0 +1,162 @@
+/* [project]/components/AuthModal.module.css [app-client] (css) */
+.AuthModal-module__DLnrsa__overlay {
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  background: #0006;
+  justify-content: center;
+  align-items: center;
+  animation: .2s ease-out AuthModal-module__DLnrsa__fadeIn;
+  display: flex;
+  position: fixed;
+  inset: 0;
+}
+
+.AuthModal-module__DLnrsa__modal {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 440px;
+  box-shadow: var(--shadow-lg);
+  padding: 32px;
+  animation: .3s cubic-bezier(.34, 1.56, .64, 1) AuthModal-module__DLnrsa__scaleUp;
+  position: relative;
+}
+
+.AuthModal-module__DLnrsa__closeBtn {
+  color: var(--text-muted);
+  cursor: pointer;
+  background: none;
+  border: none;
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  width: 32px;
+  height: 32px;
+  font-size: 24px;
+  transition: background .2s;
+  display: flex;
+  position: absolute;
+  top: 16px;
+  right: 16px;
+}
+
+.AuthModal-module__DLnrsa__closeBtn:hover {
+  background: var(--card-border);
+  color: var(--foreground);
+}
+
+.AuthModal-module__DLnrsa__title {
+  text-align: center;
+  margin-bottom: 8px;
+  font-size: 24px;
+}
+
+.AuthModal-module__DLnrsa__subtitle {
+  color: var(--text-muted);
+  text-align: center;
+  margin-bottom: 24px;
+  font-size: 14px;
+}
+
+.AuthModal-module__DLnrsa__form {
+  flex-direction: column;
+  gap: 16px;
+  display: flex;
+}
+
+.AuthModal-module__DLnrsa__inputGroup {
+  flex-direction: column;
+  gap: 6px;
+  display: flex;
+}
+
+.AuthModal-module__DLnrsa__label {
+  color: var(--foreground);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.AuthModal-module__DLnrsa__roleSelector {
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  display: grid;
+}
+
+.AuthModal-module__DLnrsa__roleOption {
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+}
+
+.AuthModal-module__DLnrsa__roleOption input {
+  display: none;
+}
+
+.AuthModal-module__DLnrsa__roleOption:hover {
+  background: var(--background);
+}
+
+.AuthModal-module__DLnrsa__roleOption.AuthModal-module__DLnrsa__active {
+  border-color: var(--primary);
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+.AuthModal-module__DLnrsa__divider {
+  text-align: center;
+  color: var(--text-muted);
+  align-items: center;
+  margin: 20px 0;
+  font-size: 12px;
+  display: flex;
+}
+
+.AuthModal-module__DLnrsa__divider:before, .AuthModal-module__DLnrsa__divider:after {
+  content: "";
+  border-bottom: 1px solid var(--card-border);
+  flex: 1;
+}
+
+.AuthModal-module__DLnrsa__divider span {
+  padding: 0 10px;
+}
+
+.AuthModal-module__DLnrsa__quickActions {
+  flex-direction: column;
+  gap: 8px;
+  display: flex;
+}
+
+@keyframes AuthModal-module__DLnrsa__fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes AuthModal-module__DLnrsa__scaleUp {
+  from {
+    opacity: 0;
+    transform: scale(.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/*# sourceMappingURL=components_AuthModal_module_css_0w3-wzy._.single.css.map*/
