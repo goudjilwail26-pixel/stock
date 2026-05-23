@@ -5,6 +5,10 @@ import { supabase } from './lib/supabase/client.js';
 import { seedDatabase } from './db.js';
 import jwt from 'jsonwebtoken';
 import { registerSchema, loginSchema, createOrderSchema, createProductSchema, createWholesalerSchema, updateStatusSchema, validate } from './validate.js';
+import multer from 'multer';
+import { v4 as uuid } from 'uuid';
+
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } });
 
 const JWT_SECRET = process.env.JWT_SECRET || 'stokiloo-dev-secret-change-in-production';
 
@@ -219,9 +223,10 @@ app.get('/api/admin/products', adminRequired, async (req, res) => {
 app.post('/api/admin/products', adminRequired, async (req, res) => {
   const parsed = validate(createProductSchema, req.body)
   if (!parsed.valid) return res.status(400).json({ error: parsed.error })
-  const { name, description, image_url, sku, price, stock_quantity, wholesaler_id } = parsed.data
+  const { name, description, image_url, sku, price, stock_quantity, wholesaler_id, images } = parsed.data
   const { data, error } = await supabase.from('products').insert({
-    wholesaler_id, name, description, image_url, sku, price,
+    wholesaler_id, name, description, image_url: images?.[0] || image_url || '', sku, price,
+    images: images || [],
     stock_quantity, in_stock: stock_quantity > 0,
   }).select().single()
   if (error) return res.status(500).json({ error: error.message })
@@ -248,6 +253,32 @@ app.post('/api/admin/wholesalers', adminRequired, async (req, res) => {
   const { data, error } = await supabase.from('wholesalers').insert(parsed.data).select().single()
   if (error) return res.status(500).json({ error: error.message })
   res.json({ success: true, id: data.id })
+})
+
+app.post('/api/admin/upload', adminRequired, upload.array('files', 10), async (req: any, res) => {
+  const files = req.files as Express.Multer.File[]
+  if (!files || files.length === 0) return res.status(400).json({ error: 'No files provided' })
+
+  const { error: bucketError } = await supabase.storage.createBucket('product-images', { public: true })
+  if (bucketError && !bucketError.message.includes('already exists')) {
+    return res.status(500).json({ error: 'Failed to create storage bucket' })
+  }
+
+  const urls: string[] = []
+  for (const file of files) {
+    const ext = file.originalname.split('.').pop() || 'jpg'
+    const fileName = `${uuid()}.${ext}`
+    const { error: uploadError } = await supabase.storage.from('product-images').upload(fileName, file.buffer, {
+      contentType: file.mimetype,
+      upsert: false,
+    })
+    if (uploadError) continue
+    const { data: { publicUrl } } = supabase.storage.from('product-images').getPublicUrl(fileName)
+    urls.push(publicUrl)
+  }
+
+  if (urls.length === 0) return res.status(500).json({ error: 'Failed to upload any files' })
+  res.json({ success: true, urls })
 })
 
 export default app

@@ -15,8 +15,9 @@ export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<'orders' | 'inventory' | 'wholesalers'>('orders');
   const [searchQuery, setSearchQuery] = useState('');
   
-  const [newProduct, setNewProduct] = useState({ name: '', sku: '', price: 0, stock_quantity: 0, image_url: '', wholesaler_id: '' });
+  const [newProduct, setNewProduct] = useState({ name: '', sku: '', price: 0, stock_quantity: 0, image_url: '', images: [] as string[], wholesaler_id: '' });
   const [showProductForm, setShowProductForm] = useState(false);
+  const [uploadingImages, setUploadingImages] = useState(false);
 
   const [newWholesaler, setNewWholesaler] = useState({ name: '', phone_number: '', provides_category: '' });
   const [showWholesalerForm, setShowWholesalerForm] = useState(false);
@@ -68,7 +69,7 @@ export default function AdminDashboard() {
       queryClient.invalidateQueries({ queryKey: ['adminProducts'] });
       queryClient.invalidateQueries({ queryKey: ['adminMetrics'] });
       setShowProductForm(false);
-      setNewProduct({ name: '', sku: '', price: 0, stock_quantity: 0, image_url: '', wholesaler_id: '' });
+      setNewProduct({ name: '', sku: '', price: 0, stock_quantity: 0, image_url: '', images: [], wholesaler_id: '' });
       toast('Product published', 'success');
     }
   });
@@ -230,7 +231,7 @@ export default function AdminDashboard() {
                 onSubmit={(e) => {
                   e.preventDefault();
                   if (!newProduct.name || !newProduct.price) return;
-                  createProduct.mutate(newProduct);
+                  createProduct.mutate({ ...newProduct, image_url: newProduct.images[0] || newProduct.image_url, images: newProduct.images });
                 }} 
                 className="space-y-4 max-w-xl"
               >
@@ -294,16 +295,61 @@ export default function AdminDashboard() {
                     </select>
                   </div>
                   <div className="space-y-1">
-                    <label className="text-xs font-semibold text-stokiloo-grey uppercase">Image URL</label>
-                    <Input 
-                      value={newProduct.image_url} 
-                      onChange={e => setNewProduct({...newProduct, image_url: e.target.value})} 
-                      className="bg-stokiloo-black border-stokiloo-border h-9 text-xs"
-                    />
+                    <label className="text-xs font-semibold text-stokiloo-grey uppercase">Images</label>
+                    <div className="flex items-center gap-2">
+                      <label className="flex h-9 w-full bg-stokiloo-black border border-stokiloo-border px-3 py-1 text-sm text-stokiloo-grey cursor-pointer hover:border-stokiloo-gold/50 transition-colors">
+                        <span className="truncate">{uploadingImages ? 'Uploading...' : newProduct.images.length > 0 ? `${newProduct.images.length} image(s) selected` : 'Choose files'}</span>
+                        <input 
+                          type="file" 
+                          accept="image/*" 
+                          multiple 
+                          className="hidden"
+                          disabled={uploadingImages}
+                          onChange={async (e) => {
+                            const files = e.target.files
+                            if (!files || files.length === 0) return
+                            setUploadingImages(true)
+                            try {
+                              const formData = new FormData()
+                              for (const f of files) formData.append('files', f)
+                              const res = await api('/api/admin/upload', { method: 'POST', body: formData })
+                              const data = await res.json()
+                              if (data.success) {
+                                setNewProduct(prev => ({ ...prev, images: [...prev.images, ...data.urls] }))
+                                toast(`${data.urls.length} image(s) uploaded`, 'success')
+                              } else {
+                                toast(data.error || 'Upload failed', 'error')
+                              }
+                            } catch {
+                              toast('Upload failed', 'error')
+                            } finally {
+                              setUploadingImages(false)
+                              e.target.value = ''
+                            }
+                          }}
+                        />
+                      </label>
+                    </div>
                   </div>
                 </div>
+                {newProduct.images.length > 0 && (
+                  <div className="flex flex-wrap gap-2 pt-1">
+                    {newProduct.images.map((url, i) => (
+                      <div key={i} className="relative group">
+                        <img src={url} alt="" className="h-16 w-16 object-cover border border-stokiloo-border" />
+                        <button 
+                          type="button"
+                          onClick={() => setNewProduct(prev => ({ ...prev, images: prev.images.filter((_, j) => j !== i) }))}
+                          className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-stokiloo-rose text-white text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
                 <div className="pt-2">
-                  <Button type="submit" size="sm" disabled={createProduct.isPending} className="w-full sm:w-auto px-6">
+                  <Button type="submit" size="sm" disabled={createProduct.isPending || uploadingImages} className="w-full sm:w-auto px-6">
                     {createProduct.isPending ? 'Saving...' : 'Publish Item'}
                   </Button>
                 </div>

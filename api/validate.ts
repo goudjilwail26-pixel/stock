@@ -34,6 +34,7 @@ export const createProductSchema = z.object({
   price: z.number().positive(),
   stock_quantity: z.number().int().min(0),
   image_url: z.string().optional().default(''),
+  images: z.array(z.string()).optional().default([]),
   wholesaler_id: z.string().optional().default('00000000-0000-0000-0000-000000000010'),
   description: z.string().optional().default(''),
 })
