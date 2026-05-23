@@ -1,20 +1,30 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# Stokiloo — B2B Wholesale Marketplace
 
-# Run and deploy your AI Studio app
+Dark editorial B2B wholesale platform built with React, Express, and Supabase.
 
-This contains everything you need to run your app locally.
+## Quick Start
 
-View your app in AI Studio: https://ai.studio/apps/1c0e504c-f16a-4491-a26c-6f1731267a63
+```bash
+npm install
+cp .env.example .env   # fill in your Supabase credentials
+npm run dev
+```
 
-## Run Locally
+## Setup Supabase
 
-**Prerequisites:**  Node.js
+1. Run the SQL from `supabase/migrations/001_schema.sql` in your Supabase SQL Editor
+2. Copy your Supabase URL and anon/service keys to `.env`
 
+## Deploy
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+```bash
+npm run build
+npm start
+```
+
+## Login
+
+| Role  | Email            | Password  |
+|-------|------------------|-----------|
+| Admin | admin@b2b.com    | admin123  |
+| Buyer | buyer@b2b.com    | buyer123  |
