@@ -11,6 +11,7 @@ import { Button } from './components/ui';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Catalog from './pages/Catalog';
+import ProductDetail from './pages/ProductDetail';
 import QuickReorder from './pages/QuickReorder';
 import Checkout from './pages/Checkout';
 import OrderConfirm from './pages/OrderConfirm';
@@ -120,6 +121,7 @@ export default function App() {
                   <Route path="/register" element={<Register />} />
                   <Route element={<MainLayout />}>
                     <Route path="/" element={<Catalog />} />
+                    <Route path="/product/:id" element={<ProductDetail />} />
                     <Route path="/order-confirmed" element={<OrderConfirm />} />
                     <Route element={<ProtectedRoute allowedRoles={['buyer', 'admin']} />}>
                       <Route path="/reorder" element={<QuickReorder />} />
